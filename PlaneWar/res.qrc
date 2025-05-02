@@ -1,0 +1,13 @@
+<RCC>
+    <qresource prefix="/">
+        <file>res/doro1.png</file>
+        <file>res/background1.png</file>
+        <file>res/doro2.png</file>
+        <file>res/doro0.png</file>
+        <file>res/doro01.png</file>
+        <file>res/doro0..png</file>
+        <file>res/doro01..png</file>
+        <file>res/orange.1.png</file>
+        <file>res/orange.2.png</file>
+    </qresource>
+</RCC>
