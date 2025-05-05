@@ -3,8 +3,16 @@
 #include <QtCore/qglobal.h>
 #include "mainscene.h"
 doro::doro() {
+
+    m_form2Right.load(DORO_FORM2_RIGHT);
+    m_form2Left.load(DORO_FORM2_LEFT);
+
+    m_form3Right.load(DORO_PATH00);
+    m_form3Left.load(DORO_PATH01);
+
     m_velocityX = 0; // 添加初始化
     m_velocityY = 0;
+
     m_doroRight.load(DORO_PATH);  // 向右图标路径
     m_doroLeft.load(DORO_PATH2);    // 向左图标路径
     m_doro.load(DORO_PATH);
@@ -24,7 +32,26 @@ doro::doro() {
 
 }
 
+void doro::enterForm3() {
+    m_doroRight.load(DORO_PATH01);  // 向右图标路径
+    m_doroLeft.load(DORO_PATH00);    // 向左图标路径
+    maodie=true;
+}
 
+void doro::exitForm3() {
+    m_doroRight.load(DORO_PATH);  // 向右图标路径
+    m_doroLeft.load(DORO_PATH2);    // 向左图标路径
+    maodie=false;
+}
+
+void doro::toggleForm() {
+    m_secondForm = !m_secondForm;
+}
+
+void doro::verticalMove(int direction) {
+
+    m_verticalSpeed = direction * MOVE_SPEED;
+}
 
 void doro::setPosition(int x,int y){
     m_X=x;
@@ -34,8 +61,6 @@ void doro::setPosition(int x,int y){
 
 };
 
-
-void doro::shoot(){};
 
 void doro::moveLeft() {
     m_velocityX = -MOVE_SPEED;  // 改为施加速度
@@ -54,22 +79,33 @@ void doro::moveRight() {
     m_facingRight = true; // 更新方向状态
 }
 
-
-
 void doro::jump() {
-    if(m_availableJumps > 0) {
-        float actualForce = (m_availableJumps == MAX_JUMPS)
-        ? JUMP_FORCE
-        : JUMP_FORCE * AIR_JUMP_MULTIPLIER;
+    // 原有二段跳条件判断保持不变
+    if((m_isGrounded || m_remainingJumps > 0) ) {
+        m_velocityY = JUMP_FORCE;
 
-        m_velocityY = actualForce;
+        if(!m_isGrounded) {
+            m_remainingJumps--;
+        } else {
+            m_remainingJumps = 3; // 保持原有二段跳次数
+        }
         m_isGrounded = false;
-        m_availableJumps--;
+
     }
 }
 
+
 void doro::updatePhysics() {
 
+    m_Y += m_verticalSpeed;
+
+    if(!m_isStunned && !m_secondForm) { // 仅在默认形态应用重力
+        m_velocityY += GRAVITY;
+        m_Y += m_velocityY;
+    }
+
+
+    m_isOnEnemy = (standingEnemy != nullptr);
 
     if(!m_isDashing) {
         m_velocityX *= 0.1f; // 加入摩擦系数
@@ -111,8 +147,6 @@ void doro::updatePhysics() {
 
     // 常规物理计算
     if (!m_isStunned) {
-        m_velocityY += GRAVITY * 0.9f;  // 增加空气阻力
-        m_Y += m_velocityY;
 
         // 地面检测（包含敌人站立状态）
         int groundLevel = GAME_HEIGHT - m_doro.height() - 50;
@@ -126,13 +160,9 @@ void doro::updatePhysics() {
     m_Rect.moveTo(m_X, m_Y);
 }
 
-
-
-
 void doro::resetJumps() {
     m_availableJumps = MAX_JUMPS; // 重置为最大跳跃次数
 }
-
 
 void doro::startStun(int duration) {
     m_isStunned = true;
@@ -143,7 +173,7 @@ void doro::startStun(int duration) {
     QPixmap stunnedPixmap = m_facingRight ? m_doroRight.scaled(120, 120) :  m_doroLeft.scaled(120, 120);
     m_doro = stunnedPixmap;  // 需要添加临时成员变量
 }
-// doro.cpp 修改startDash和updateDash方法
+
 void doro::startDash() {
     if (m_dashCooldownTimer.isValid() &&
         m_dashCooldownTimer.elapsed() < DASH_COOLDOWN) return;
@@ -206,13 +236,14 @@ void doro::updateDash() {
     // 更新碰撞框
     m_Rect.moveTo(m_X, m_Y);
 }
+
+
 void doro::checkDashCollision() {
     // 碰撞检测逻辑
     QRect dashHitBox = m_Rect.adjusted(
         m_dashDirection * 20,10, m_dashDirection * 50,-10);
-
-
 }
+
 
 void doro::addAfterimage() {
     QPixmap current = m_facingRight ? m_doroRight : m_doroLeft;
@@ -227,5 +258,39 @@ void doro::addAfterimage() {
     if(m_dashAfterimages.size() > 5) {
         m_dashAfterimages.removeFirst();
     }
+}
+
+
+
+void doro::activateShield(int shieldHP) {
+    if (shieldHP <= 0) return;
+
+    m_isShieldActive = true;
+    m_shieldHP = shieldHP;
+    m_maxShieldHP = shieldHP;
+
+    // 启动护盾持续时间计时器（10秒）
+    m_shieldTimer.start(10000); // 10秒后触发超时
+
+}
+
+void doro::updateShield() {
+    if (m_isShieldActive ) {
+        m_isShieldActive = false;
+        m_shieldHP = 0;
+    }
+}
+
+// 在takeDamage中优先扣除护盾
+void doro::takeDamage(int damage) {
+    if (m_isShieldActive) {
+        m_shieldHP = qMax(0, m_shieldHP - damage);
+        if (m_shieldHP == 0) {
+            m_isShieldActive = false;
+        }
+        return;
+    }
+
+    health = qMax(0, health - damage);
 }
 

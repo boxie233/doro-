@@ -39,6 +39,12 @@ public:
   int m_damage;
 
   int getDamage() const { return m_damage; }
+
+  void setVelocity(const QPointF& velocity);
+
+
+  QPointF m_velocity; // 新增速度成员变量
+
 };
 
 #endif // BULLET_H

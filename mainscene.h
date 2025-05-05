@@ -9,6 +9,7 @@
 #include "config.h"
 #include "enemy.h"
 
+
 class MainScene : public QWidget
 {
     Q_OBJECT
@@ -75,6 +76,20 @@ public:
 
     float m_preDashSpeedX; // 记录冲刺前的水平速度
     bool m_wasGrounded;    // 记录冲刺前的地面状态
+
+    bool m_bossSpawned = false;
+    QTimer m_enemySpawnTimer;
+
+    bool m_bossTextVisible = false; // 新增字幕显示状态
+    QTimer m_bossTextTimer;          // 新增字幕持续时间定时器
+
+    QTimer m_skillEffectTimer;
+    bool m_activeBossSkill = false;
+
+    void gameOver(const QString &msg);
+    void gameWin(const QString &msg);
+
+    bool maodie;
 
 };
 #endif // MAINSCENE_H

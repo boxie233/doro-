@@ -11,5 +11,18 @@
         <file>res/orange.2.png</file>
         <file>res/enemy10.png</file>
         <file>res/enemy1.png</file>
+        <file>res/music.m4a</file>
+        <file>res/enemy2.png</file>
+        <file>res/enemy3.png</file>
+        <file>res/enemy20.png</file>
+        <file>res/enemy30.png</file>
+        <file>res/music1.mp3</file>
+        <file>res/enemy4.png</file>
+        <file>res/enemy40.png</file>
+        <file>res/talesi0.png</file>
+        <file>res/talesi01.png</file>
+        <file>res/doro5.png</file>
+        <file>res/doro50.png</file>
+        <file>res/maodie.png</file>
     </qresource>
 </RCC>

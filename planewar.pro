@@ -33,5 +33,7 @@ RESOURCES += \
     res.qrc \
     res.qrc
 
+QT += multimedia
+
 CONFIG+=resources_big
 
