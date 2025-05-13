@@ -1,5 +1,5 @@
 前情提要：需要打开dorowar文件夹，运行里面的doro.pro
-（除了dorowar文件夹以外的请忽视）
+（只需下载dorowar文件夹即可）
 
 
 
