@@ -13,7 +13,7 @@
 //地图
 #define MAP_PATH ":/res/background1.png"
 #define MAP_PATH2 ":/res/background2.png"
-#define MAP_SCROLL_SPEED 0
+#define MAP_SCROLL_SPEED 1
 #define GROUND_Y (GAME_HEIGHT - 150)
 
 
@@ -28,9 +28,9 @@ const char DORO_FORM2_RIGHT[] = ":/res/talesi01.png";
 const char DORO_FORM2_LEFT[] = ":/res/talesi0.png";
 
 
-#define DORO_PATH00 ":/res/maodie.png"
-#define DORO_PATH01 ":/res/maodie.png"
-
+#define DORO_PATH00 ":/res/youxia1.png"
+#define DORO_PATH01 ":/res/youxia.png"
+#define SCORE 3000
 
 
 
@@ -76,5 +76,7 @@ const float DASH_SPEED = 12.0f;    // 突刺速度
 const int DASH_DISTANCE = 400;     // 突刺距离
 const int DASH_COOLDOWN = 0;    // 冷却时间2秒
 const QColor DASH_COLOR = QColor(128, 0, 128, 128); // 残影颜色
+
+
 
 #endif // CONFIG_H

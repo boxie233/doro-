@@ -24,5 +24,7 @@
         <file>res/doro5.png</file>
         <file>res/doro50.png</file>
         <file>res/maodie.png</file>
+        <file>res/youxia.png</file>
+        <file>res/youxia1.png</file>
     </qresource>
 </RCC>

@@ -61,6 +61,9 @@ void MainScene::initScene(){
 
 void MainScene::playGame(){m_Timer.start();connect(&m_Timer,&QTimer::timeout,[=](){
 
+        if (m_score >= SCORE )
+            gameWin("胜利");
+
         handleContinuousInput();
 
         m_doro.updatePhysics(); // 新增物理更新
@@ -135,19 +138,6 @@ void MainScene::paintEvent(QPaintEvent *){
     painter.drawPixmap(m_map.m_map1_posX,0,m_map.m_map1);
     painter.drawPixmap(m_map.m_map2_posX,0,m_map.m_map2);
 
-    if(maodie) {
-        painter.setBrush(QColor(128, 128, 0, 60));
-        painter.setPen(Qt::NoPen);
-        painter.drawRect(rect());
-        QFont font("Arial", 72, QFont::Bold);
-        painter.setFont(font);
-        painter.setPen(QColor(0, 0, 0, 150));
-        painter.drawText(GAME_WIDTH/2-200, GAME_HEIGHT/2 , "奥义*耄耋");
-        painter.setPen(QColor(0, 255, 128));
-        painter.drawText(GAME_WIDTH/2-200, GAME_HEIGHT/2, "奥义*耄耋");
-        QPixmap stunIcon(DORO_PATH00);
-        painter.drawPixmap(GAME_WIDTH/2-400, GAME_HEIGHT/2-250,200, 400, stunIcon);
-    }
 
 
 
@@ -354,12 +344,12 @@ void MainScene::keyPressEvent(QKeyEvent* event) {
     }
 
     if (event->key() == Qt::Key_K) {
-        maodie=true;
+        maodie=false;
         m_doro.enterForm3();
 
     }
     if (event->key() == Qt::Key_L) {
-        maodie=false;
+        maodie=true;
         m_doro.exitForm3();
     }
 
@@ -418,7 +408,7 @@ void MainScene::updateEnemies() {
         (*it)->update();
         if (!(*it)->isAlive()) {
             if ((*it)->enemyType == Enemy::Type::Boss) {
-                gameWin("恭喜通关！");  // 击杀boss触发通关
+                m_score += 1000;
             }
             delete *it;
             it = m_enemies.erase(it);
@@ -522,7 +512,7 @@ void MainScene::spawnEnemy() {
         m_enemies.append(new Enemy( QPoint(QRandomGenerator::global()->bounded(GAME_WIDTH), QRandomGenerator::global()->bounded(100, GAME_HEIGHT/2)), Enemy::Type::Flying));
     }
 
-    if (m_score >= 100 && !m_bossSpawned) {
+    if (m_score >= 1200 && !m_bossSpawned) {
         // 生成在屏幕右侧固定位置
         QPoint bossPos(GAME_WIDTH-300, GROUND_Y-100);
         m_enemies.append(new Enemy(bossPos, Enemy::Type::Boss));
@@ -539,6 +529,7 @@ void MainScene::gameOver(const QString &msg) {
 }
 
 void MainScene::gameWin(const QString &msg) {
+
     QMessageBox::information(this, "胜利", msg);
     QApplication::quit();
 }

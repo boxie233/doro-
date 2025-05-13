@@ -1,4 +1,4 @@
-QT       += core gui
+QT        += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -34,6 +34,8 @@ RESOURCES += \
     res.qrc
 
 QT += multimedia
+
+QT += core gui multimedia widgets
 
 CONFIG+=resources_big
 

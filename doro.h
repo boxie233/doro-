@@ -133,7 +133,9 @@ public:
     int getMaxShieldHP() const { return m_maxShieldHP; }
 
 
-    bool maodie=false;
+    bool maodie=true;
+
+
 
 
 
